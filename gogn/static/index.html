@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ábúendatal</title>
+</head>
+
+<body ng-app="app" ng-controller="AppCtrl as app">
+Your app goes here.
+
+<button ng-click="app.addNew()">Add new area!</button>
+
+<div ng-repeat="farm_name in app.farm_names">
+    {{ farm_names.area_name }}
+</div>
+
+
+<script src="bower_components/angular/angular.js"></script>
+
+<script src="js/app.js"></script>
+
+
+</body>
+</html>
