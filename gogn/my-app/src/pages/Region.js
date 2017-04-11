@@ -26,8 +26,9 @@ class Region extends Component {
         .then(response => response.json())
         .then((data) => {
             console.log('data', data);
+//            const data1 = (id) => data.find(data => data.area_id === id)
             this.setState({
-                regions: data.objects,
+                region: data.objects,
 
             });
         })
@@ -43,9 +44,11 @@ class Region extends Component {
   render() {
     const { region, error } = this.state;
     const list = region.map((region) => {
-      const link = '/region/'+region.area_id+'/' + region.farm_id;
+      const link = '/farm/' + region.farm_id;
+        <p>Jææja.......</p>
       return (
-        <li key={region.farm_id }><Link to={link}>{region.farm_name}</Link></li>
+          <p>Listi af bæjum á svæði: {region.area_name}</p>+
+          <li key={region.area_id}><Link to={link}>{region.farm_name} </Link></li>
       );
     })
 

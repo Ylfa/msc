@@ -47,7 +47,8 @@ class Regions extends Component {
     const list = regions.map((regions) => {
       const link = '/region/' + regions.area_id;
       return (
-        <li key={regions.area_id}><Link to={link}>{regions.area_name}</Link></li>
+
+          <li key={regions.area_id}><Link to={link}>{regions.area_name}</Link></li>
       );
     })
 
