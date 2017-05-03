@@ -13,21 +13,22 @@ class Farm extends Component {
     super(props);
 
     this.state = {
-      region: []
+      farm: {}
     }
   }
   componentDidMount() {
-    const id = this.props.match.params.id;
-    this.fetchData(id);
+    const regionid = this.props.match.params.regionid;
+    const farmid = this.props.match.params.farmid;
+    this.fetchData(regionid, farmid);
   }
 
-  fetchData(id) {
-      fetch('http://localhost:5000/api/farm_names')
+  fetchData(regionid, farmid) {
+      fetch('http://localhost:5000/api/farm_names/' + farmid)
         .then(response => response.json())
         .then((data) => {
             console.log('data', data);
             this.setState({
-                regions: data.objects,
+                farm: data,
 
             });
         })
@@ -40,22 +41,15 @@ class Farm extends Component {
   }
 
 render() {
-    const { region, error } = this.state;
-    const list = region.map((region) => {
-      const link = '/family/' + region.farm_id;
-      return (
-        <li key={region.farm_id }><Link to={link}>{region.name_data} { region.year_data} </Link></li>
-      );
-    })
-
+    const { farm, error } = this.state;
+    console.log('farm', farm)
+    const name = farm && farm.farm_name ? farm.farm_name : '';
+    const area = farm.area_name;
     return (
       <div>
-        <h2>Bær Farm</h2>
+        <h2>Bær {name}</h2>
         <br/>blabla
           {error ? (<p>Villa við að sækja gögn!</p>) : null}
-        <ul className="link-list">
-          {list + 'belble'}
-        </ul>
         <Link to="/">Til baka</Link>
       </div>
     );

@@ -19,6 +19,8 @@ def init_tables():
         cur.execute('''DROP TABLE IF EXISTS FARM_NAMES''')
         cur.execute('''DROP TABLE IF EXISTS FARM_FAMILY''')
         cur.execute('''DROP TABLE IF EXISTS AREA_ID''')
+        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES_ONE''')
+        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES_TWO''')
         cur.execute('''CREATE TABLE IF NOT EXISTS FARM_FAMILY(
           FAMILY_ID INTEGER PRIMARY KEY AUTOINCREMENT,
           FARM_ID INTEGER,
@@ -31,6 +33,20 @@ def init_tables():
           FARM_NAME TEXT,
           YEAR_DATA BLOB,
           NAME_DATA BLOB);''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES_ONE(
+                  AREA_ID INTEGER,
+                  FARM_ID INTEGER PRIMARY KEY,
+                  AREA_NAME TEXT,
+                  FARM_NAME TEXT,
+                  YEAR_DATA BLOB,
+                  NAME_DATA BLOB);''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES_TWO(
+                          AREA_ID INTEGER,
+                          FARM_ID INTEGER PRIMARY KEY,
+                          AREA_NAME TEXT,
+                          FARM_NAME TEXT,
+                          YEAR_DATA BLOB,
+                          NAME_DATA BLOB);''')
         cur.execute('''CREATE TABLE IF NOT EXISTS AREA_ID(
           AREA_ID INTEGER primary key autoincrement,
           AREA_NAME TEXT);''')
@@ -78,6 +94,7 @@ def main():
     id = 1
     wb = load_workbook(filename='Vinnuskjal1.xlsx')
     ws = wb.worksheets[n]
+    area_one = []
     sheet_names = wb.get_sheet_names()
 
     a = init_tables()
@@ -105,9 +122,21 @@ def main():
             del data_cleaned[0]
             del new_list[0]
         n += 1
-        id+=1
+        id += 1
         ws = wb.worksheets[n]
         sheet_names.pop(0)
+
+    with con:
+        cur.execute("SELECT * FROM FARM_NAMES WHERE AREA_ID = 1")
+        rows = cur.fetchall()
+        for row in rows:
+            cur.execute('INSERT INTO FARM_NAMES_ONE (AREA_ID, FARM_ID, AREA_NAME,  FARM_NAME, YEAR_DATA, NAME_DATA) VALUES (?,?,?,?,?,?)', row)
+    with con:
+        cur.execute("SELECT * FROM FARM_NAMES WHERE AREA_ID = 2")
+        rows = cur.fetchall()
+        for row in rows:
+            cur.execute('INSERT INTO FARM_NAMES_TWO (AREA_ID, FARM_ID, AREA_NAME,  FARM_NAME, YEAR_DATA, NAME_DATA) VALUES (?,?,?,?,?,?)', row)
+
 
 main()
 

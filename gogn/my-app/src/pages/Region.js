@@ -17,6 +17,8 @@ class Region extends Component {
     }
   }
   componentDidMount() {
+    //const regionid = this.props.match.params.regionid;
+    //const farmid = this.props.match.params.farmid;
     const id = this.props.match.params.id;
     this.fetchData(id);
   }
@@ -43,13 +45,13 @@ class Region extends Component {
 
   render() {
     const { region, error } = this.state;
+    console.log(region)
     const list = region.map((region) => {
-      const link = '/farm/' + region.farm_id;
-        <p>Jææja.......</p>
+      const link = '/region/' + region.area_id + '/farm/' + region.farm_id;
+
       return (
-          <p>Listi af bæjum á svæði: {region.area_name}</p>+
-          <li key={region.area_id}><Link to={link}>{region.farm_name} </Link></li>
-      );
+          <li key={region.farm_id}><Link to={link}>Hreppur: {region.area_name} - <bold>Bær:</bold>{region.farm_name} </Link></li>
+      )
     })
 
     return (
@@ -58,7 +60,7 @@ class Region extends Component {
         <br/>bleble
           {error ? (<p>Villa við að sækja gögn!</p>) : null}
         <ul className="link-list">
-          {list + 'belble'}
+          {list}
         </ul>
         <Link to="/">Til baka</Link>
       </div>
