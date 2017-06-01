@@ -23,7 +23,7 @@ class Farm extends Component {
   }
 
   fetchData(regionid, farmid) {
-      fetch('http://localhost:5000/api/farm_names/' + farmid)
+      fetch('http://localhost:5000/api/farm_names' + regionid + '/' + farmid)
         .then(response => response.json())
         .then((data) => {
             console.log('data', data);
@@ -45,10 +45,17 @@ render() {
     console.log('farm', farm)
     const name = farm && farm.farm_name ? farm.farm_name : '';
     const area = farm.area_name;
+    const list = farm.map((farm) => {
+        const link = '/region/' + farm.area_id + '/farms/' + farm.farm_id;
+        return (
+            <li key={farm.farm_id}><Link to={link}>{farm.farm_name}</Link></li>
+        );
+    })
+
     return (
       <div>
         <h2>Bær {name}</h2>
-        <br/>blabla
+        <br/>
           {error ? (<p>Villa við að sækja gögn!</p>) : null}
         <Link to="/">Til baka</Link>
       </div>

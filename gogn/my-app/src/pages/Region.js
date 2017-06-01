@@ -24,7 +24,7 @@ class Region extends Component {
   }
 
   fetchData(id) {
-      fetch('http://localhost:5000/api/farm_names')
+      fetch('http://localhost:5000/api/farm_names'+id)
         .then(response => response.json())
         .then((data) => {
             console.log('data', data);

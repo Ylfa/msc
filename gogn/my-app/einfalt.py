@@ -19,8 +19,14 @@ def init_tables():
         cur.execute('''DROP TABLE IF EXISTS FARM_NAMES''')
         cur.execute('''DROP TABLE IF EXISTS FARM_FAMILY''')
         cur.execute('''DROP TABLE IF EXISTS AREA_ID''')
-        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES_ONE''')
-        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES_TWO''')
+        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES1''')
+        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES2''')
+        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES3''')
+        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES4''')
+        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES5''')
+        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES6''')
+        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES7''')
+
         cur.execute('''CREATE TABLE IF NOT EXISTS FARM_FAMILY(
           FAMILY_ID INTEGER PRIMARY KEY AUTOINCREMENT,
           FARM_ID INTEGER,
@@ -33,26 +39,60 @@ def init_tables():
           FARM_NAME TEXT,
           YEAR_DATA BLOB,
           NAME_DATA BLOB);''')
-        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES_ONE(
+        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES1(
                   AREA_ID INTEGER,
                   FARM_ID INTEGER PRIMARY KEY,
                   AREA_NAME TEXT,
                   FARM_NAME TEXT,
                   YEAR_DATA BLOB,
                   NAME_DATA BLOB);''')
-        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES_TWO(
+        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES2(
                           AREA_ID INTEGER,
                           FARM_ID INTEGER PRIMARY KEY,
                           AREA_NAME TEXT,
                           FARM_NAME TEXT,
                           YEAR_DATA BLOB,
                           NAME_DATA BLOB);''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES3(
+                          AREA_ID INTEGER,
+                          FARM_ID INTEGER PRIMARY KEY,
+                          AREA_NAME TEXT,
+                          FARM_NAME TEXT,
+                          YEAR_DATA BLOB,
+                          NAME_DATA BLOB);''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES4(
+                                  AREA_ID INTEGER,
+                                  FARM_ID INTEGER PRIMARY KEY,
+                                  AREA_NAME TEXT,
+                                  FARM_NAME TEXT,
+                                  YEAR_DATA BLOB,
+                                  NAME_DATA BLOB);''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES5(
+                          AREA_ID INTEGER,
+                          FARM_ID INTEGER PRIMARY KEY,
+                          AREA_NAME TEXT,
+                          FARM_NAME TEXT,
+                          YEAR_DATA BLOB,
+                          NAME_DATA BLOB);''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES6(
+                                  AREA_ID INTEGER,
+                                  FARM_ID INTEGER PRIMARY KEY,
+                                  AREA_NAME TEXT,
+                                  FARM_NAME TEXT,
+                                  YEAR_DATA BLOB,
+                                  NAME_DATA BLOB);''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES7(
+                          AREA_ID INTEGER,
+                          FARM_ID INTEGER PRIMARY KEY,
+                          AREA_NAME TEXT,
+                          FARM_NAME TEXT,
+                          YEAR_DATA BLOB,
+                          NAME_DATA BLOB);''')
+
         cur.execute('''CREATE TABLE IF NOT EXISTS AREA_ID(
           AREA_ID INTEGER primary key autoincrement,
           AREA_NAME TEXT);''')
     return "Database init done."
-
-
 
 
 def get_family(year_data, name_data):
@@ -130,12 +170,37 @@ def main():
         cur.execute("SELECT * FROM FARM_NAMES WHERE AREA_ID = 1")
         rows = cur.fetchall()
         for row in rows:
-            cur.execute('INSERT INTO FARM_NAMES_ONE (AREA_ID, FARM_ID, AREA_NAME,  FARM_NAME, YEAR_DATA, NAME_DATA) VALUES (?,?,?,?,?,?)', row)
+            cur.execute('INSERT INTO FARM_NAMES1 (AREA_ID, FARM_ID, AREA_NAME,  FARM_NAME, YEAR_DATA, NAME_DATA) VALUES (?,?,?,?,?,?)', row)
     with con:
         cur.execute("SELECT * FROM FARM_NAMES WHERE AREA_ID = 2")
         rows = cur.fetchall()
         for row in rows:
-            cur.execute('INSERT INTO FARM_NAMES_TWO (AREA_ID, FARM_ID, AREA_NAME,  FARM_NAME, YEAR_DATA, NAME_DATA) VALUES (?,?,?,?,?,?)', row)
+            cur.execute('INSERT INTO FARM_NAMES2 (AREA_ID, FARM_ID, AREA_NAME,  FARM_NAME, YEAR_DATA, NAME_DATA) VALUES (?,?,?,?,?,?)', row)
+    with con:
+        cur.execute("SELECT * FROM FARM_NAMES WHERE AREA_ID = 3")
+        rows = cur.fetchall()
+        for row in rows:
+            cur.execute('INSERT INTO FARM_NAMES3 (AREA_ID, FARM_ID, AREA_NAME,  FARM_NAME, YEAR_DATA, NAME_DATA) VALUES (?,?,?,?,?,?)', row)
+    with con:
+        cur.execute("SELECT * FROM FARM_NAMES WHERE AREA_ID = 4")
+        rows = cur.fetchall()
+        for row in rows:
+            cur.execute('INSERT INTO FARM_NAMES4 (AREA_ID, FARM_ID, AREA_NAME,  FARM_NAME, YEAR_DATA, NAME_DATA) VALUES (?,?,?,?,?,?)', row)
+    with con:
+        cur.execute("SELECT * FROM FARM_NAMES WHERE AREA_ID = 5")
+        rows = cur.fetchall()
+        for row in rows:
+            cur.execute('INSERT INTO FARM_NAMES5 (AREA_ID, FARM_ID, AREA_NAME,  FARM_NAME, YEAR_DATA, NAME_DATA) VALUES (?,?,?,?,?,?)', row)
+    with con:
+        cur.execute("SELECT * FROM FARM_NAMES WHERE AREA_ID = 6")
+        rows = cur.fetchall()
+        for row in rows:
+            cur.execute('INSERT INTO FARM_NAMES6 (AREA_ID, FARM_ID, AREA_NAME,  FARM_NAME, YEAR_DATA, NAME_DATA) VALUES (?,?,?,?,?,?)', row)
+    with con:
+        cur.execute("SELECT * FROM FARM_NAMES WHERE AREA_ID = 7")
+        rows = cur.fetchall()
+        for row in rows:
+            cur.execute('INSERT INTO FARM_NAMES7 (AREA_ID, FARM_ID, AREA_NAME,  FARM_NAME, YEAR_DATA, NAME_DATA) VALUES (?,?,?,?,?,?)', row)
 
 
 main()
