@@ -28,7 +28,6 @@ class Region extends Component {
         .then(response => response.json())
         .then((data) => {
             console.log('data', data);
-//            const data1 = (id) => data.find(data => data.area_id === id)
             this.setState({
                 region: data.objects,
 
@@ -57,7 +56,7 @@ class Region extends Component {
     return (
       <div>
         <h2>Svæði Region</h2>
-        <br/>bleble
+        <br/>
           {error ? (<p>Villa við að sækja gögn!</p>) : null}
         <ul className="link-list">
           {list}

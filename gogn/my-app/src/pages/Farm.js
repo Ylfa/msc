@@ -21,7 +21,6 @@ class Farm extends Component {
     const farmid = this.props.match.params.farmid;
     this.fetchData(regionid, farmid);
   }
-
   fetchData(regionid, farmid) {
       fetch('http://localhost:5000/api/farm_names' + regionid + '/' + farmid)
         .then(response => response.json())
@@ -29,7 +28,6 @@ class Farm extends Component {
             console.log('data', data);
             this.setState({
                 farm: data,
-
             });
         })
           .catch((err) => {
@@ -39,16 +37,15 @@ class Farm extends Component {
               })
           });
   }
-
 render() {
     const { farm, error } = this.state;
     console.log('farm', farm)
     const name = farm && farm.farm_name ? farm.farm_name : '';
     const area = farm.area_name;
-    const list = farm.map((farm) => {
+    const list = farm.map((farm) => {   //
         const link = '/region/' + farm.area_id + '/farms/' + farm.farm_id;
         return (
-            <li key={farm.farm_id}><Link to={link}>{farm.farm_name}</Link></li>
+            <li key={farm.farm_id}><Link to={link}>Bær: {farm.farm_name} Nöfnin: {farm.name_data} Ártöl: {farm.year_data}</Link></li>
         );
     })
 
@@ -57,6 +54,9 @@ render() {
         <h2>Bær {name}</h2>
         <br/>
           {error ? (<p>Villa við að sækja gögn!</p>) : null}
+        <ul>
+          {list}
+        </ul>
         <Link to="/">Til baka</Link>
       </div>
     );
