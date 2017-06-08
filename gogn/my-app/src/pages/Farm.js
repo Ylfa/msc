@@ -13,8 +13,9 @@ class Farm extends Component {
     super(props);
 
     this.state = {
-      farm: {}
+        farm: {}
     }
+
   }
   componentDidMount() {
     const regionid = this.props.match.params.regionid;
@@ -42,21 +43,24 @@ render() {
     console.log('farm', farm)
     const name = farm && farm.farm_name ? farm.farm_name : '';
     const area = farm.area_name;
-    const list = farm.map((farm) => {   //
-        const link = '/region/' + farm.area_id + '/farms/' + farm.farm_id;
-        return (
-            <li key={farm.farm_id}><Link to={link}>Bær: {farm.farm_name} Nöfnin: {farm.name_data} Ártöl: {farm.year_data}</Link></li>
-        );
-    })
+    const name_data = farm.name_data;
+    const year_data = farm.year_data;
+    //farm.map((farm) => {   //
+       // const link = '/region/' + farm.area_id + '/farms/' + farm.farm_id + '/' + farm.farm_name;
+       // return (
+       //     <li key={farm.farm_id}><Link to={link}>Bær: {farm.farm_name} Nöfnin: {farm.name_data} Ártöl: {farm.year_data}</Link></li>
+       // );
+    //})
 
     return (
       <div>
-        <h2>Bær {name}</h2>
+        <h2>Bær {name} Svæði: {area}</h2>
         <br/>
+          <h3>Ábúendur:</h3> {name_data}
+          <br/>
+          <h3>Ártöl:</h3> {year_data}
           {error ? (<p>Villa við að sækja gögn!</p>) : null}
-        <ul>
-          {list}
-        </ul>
+
         <Link to="/">Til baka</Link>
       </div>
     );
