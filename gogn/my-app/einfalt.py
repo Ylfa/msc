@@ -122,9 +122,20 @@ def get_fams(database_row):
     return_rows = []
     n = 0
     a = database_row[0]
+
     b = database_row[1]
     c = database_row[2]
-    #print(b)
+
+    #testing = []
+    #testing.append([a, b[0], c[0]])
+    #print(testing[0])
+
+
+
+    #print(a)
+    #print(c)
+    #for i in range(0, len(b)):
+    #    print('b'+str(b[i])+'c'+str(c[i]))
     #while len(b)>0:
     d = len(b)
     #print(d)
@@ -139,8 +150,8 @@ def get_fams(database_row):
               and c[n] in ('', None, ' ','  ')
               and n > 0): #báðar tómar, gögn í línum fyrir ofan
             return_rows.append([a, b[:n], c[:n]])
-            a = a[n:] #taka út það sem búið er að bæta við sem fjölla
-            b = b[n:]
+            b = b[n:] #taka út það sem búið er að bæta við sem fjölla
+            c = c[n:]
             n = 0 #byrja nýja fjölluskráningu
         else:
             n +=1 #gögn á línunni, halda áfram að skrolla niður
@@ -256,16 +267,16 @@ def main():
     #OBS: BREYTA FAM_NAME Í FAM_ID MEÐ ÞVÍ AÐ JOINA VIÐ AÐRA TÖFLU
 
     #print(full_list[0])
-    all_fams = get_fams(full_list[0])
-    print(all_fams[0][2])
-    #with con:
-        #for item in all_fams:
+    while len(full_list)>0:
+        all_fams = get_fams(full_list[0])
 
+        for i in range(0, len(all_fams)):
+            first_fam = [str(all_fams[i][0]), str(all_fams[i][1]), str(all_fams[i][2])]
+            with con:
             #sql_insert = [ws.title, id, data_cleaned[0], str(year_blob), str(name_blob)]
+                cur.execute('INSERT INTO FARM_FAMILY (FARM_NAME, FAMILY_YEAR, FAMILY_DATA) VALUES (?,?,?)', first_fam)
 
-            #first_fam = [str(all_fams[0][0]), str(all_fams[0][1]), str(all_fams[0][2])]
-            #cur.execute('INSERT INTO FARM_FAMILY (FARM_NAME, FAMILY_YEAR, FAMILY_DATA) VALUES (?,?,?)', first_fam)
-            #del all_fams[0]
+        del full_list[0]
 
 main()
 
