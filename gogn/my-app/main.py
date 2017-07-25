@@ -29,9 +29,10 @@ class farm_names(db.Model):
     farm_id = Column(Integer, primary_key=True)
     area_id = Column(Integer, unique=False)
     area_name = Column(Text, unique=False)
-    farm_name = Column(Text, unique=True)
+    farm_name = Column(Text, unique=False)
 #    year_data = Column(Text, unique=True)
 #    name_data = Column(Text, unique=True)
+#    farm_id = relationship('farm_id', ForeignKey('farm_family.farm_name'))
 
 
 class area_id(db.Model):
@@ -88,6 +89,20 @@ class farm_names7(db.Model):
     year_data = Column(Text, unique=True)
     name_data = Column(Text, unique=True)
 
+class farm_family(db.Model):
+    family_id = Column(Integer, primary_key=True)
+    area_id = Column(Integer, ForeignKey('farm_names.area_id'))
+    farm_name = Column(Text, ForeignKey('farm_names.farm_name'))
+    farm_id = Column(Integer, unique=False)
+    family_year = Column(Text, unique=False)
+    family_data = Column(Text, unique=False)
+    farm_id = relationship("farm_names",
+                           primaryjoin="and_(farm_names.farm_name==farm_family.farm_name,"
+                           "farm_names.area_id==farm_family.area_id)")
+                    #primaryjoin="and_(User.id==Address.user_id, "
+                    #    "Address.city=='Boston')")
+
+
 db.create_all()
 
 api_manager = APIManager(app, flask_sqlalchemy_db=db)
@@ -100,24 +115,11 @@ api_manager.create_api(farm_names4, methods=['POST', 'GET', 'DELETE', 'PUT'])
 api_manager.create_api(farm_names5, methods=['POST', 'GET', 'DELETE', 'PUT'])
 api_manager.create_api(farm_names6, methods=['POST', 'GET', 'DELETE', 'PUT'])
 api_manager.create_api(farm_names7, methods=['POST', 'GET', 'DELETE', 'PUT'])
+api_manager.create_api(farm_family, methods=['POST', 'GET', 'DELETE', 'PUT'])
 
 app.after_request(add_cors_header)
 
 
-"""""
-@app.route('/area_name', methods=['GET','POST'])
-def area_name():
-    area_name = request.form['area_name']
-    #a = requests.get('api-slóð')
-    #json_object = r.json
-    #temp_k = json_object['main']['temp']
-    return 'This is area_name return' #app.send_static_file('/public/area_name.html')
-
-
-@app.route('/') #root directory
-def index():
-    return 'Hello app' #app.send_static_file('/Users/ylfa/msc/gogn/my-app/public/index.html')
-"""""
 
 #app.debug = True
 if __name__ == "__main__":

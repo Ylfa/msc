@@ -27,11 +27,8 @@ def init_tables():
         cur.execute('''DROP TABLE IF EXISTS FARM_NAMES6''')
         cur.execute('''DROP TABLE IF EXISTS FARM_NAMES7''')
 
-        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_FAMILY(
-          FAMILY_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-          FARM_NAME TEXT,
-          FAMILY_YEAR BLOB,
-          FAMILY_DATA BLOB);''')
+
+
         cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES(
           AREA_ID INTEGER,
           FARM_ID INTEGER primary key autoincrement,
@@ -39,6 +36,10 @@ def init_tables():
           FARM_NAME TEXT,
           YEAR_DATA BLOB,
           NAME_DATA BLOB);''')
+
+
+
+
         cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES1(
                   AREA_ID INTEGER,
                   FARM_ID INTEGER PRIMARY KEY,
@@ -92,6 +93,21 @@ def init_tables():
         cur.execute('''CREATE TABLE IF NOT EXISTS AREA_ID(
           AREA_ID INTEGER primary key autoincrement,
           AREA_NAME TEXT);''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_FAMILY(
+                  FAMILY_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                  AREA_ID INTEGER,
+                  FARM_NAME TEXT,
+                  FAMILY_YEAR TEXT,
+                  FAMILY_DATA TEXT,
+                  FOREIGN KEY(FARM_NAME) REFERENCES FARM_NAMES(FARM_NAME),
+                  FOREIGN KEY(AREA_ID) REFERENCES FARM_NAMES(AREA_ID),
+                  FOREIGN KEY(FARM_NAME) REFERENCES FARM_NAMES1(FARM_NAME),
+                  FOREIGN KEY(FARM_NAME) REFERENCES FARM_NAMES2(FARM_NAME),
+                  FOREIGN KEY(FARM_NAME) REFERENCES FARM_NAMES3(FARM_NAME),
+                  FOREIGN KEY(FARM_NAME) REFERENCES FARM_NAMES4(FARM_NAME),
+                  FOREIGN KEY(FARM_NAME) REFERENCES FARM_NAMES5(FARM_NAME),
+                  FOREIGN KEY(FARM_NAME) REFERENCES FARM_NAMES6(FARM_NAME),
+                  FOREIGN KEY(FARM_NAME) REFERENCES FARM_NAMES7(FARM_NAME));''')
     return "Database init done."
 
 
@@ -104,39 +120,12 @@ def get_fams(database_row):
     - Editable web by login: Edit in excel or database?
     """
 
-    """count up to next None, Append rows up to None, along with
-    corresponding years as one element in new lists
-
-    i = 0
-    for n in range(0, len(name_data)):
-
-        if name_data[i]:
-            Keep counting
-        else
-            Write to new lists
-    years = year_data
-    families = name_data
-    print(blob2[1]) --ger första tecknet, ej första elementet. Hitta str efter , som ej ar None, appenda
-    blobs = [blob1, blob2]"""
-
     return_rows = []
     n = 0
-    a = database_row[0]
-
-    b = database_row[1]
-    c = database_row[2]
-
-    #testing = []
-    #testing.append([a, b[0], c[0]])
-    #print(testing[0])
-
-
-
-    #print(a)
-    #print(c)
-    #for i in range(0, len(b)):
-    #    print('b'+str(b[i])+'c'+str(c[i]))
-    #while len(b)>0:
+    area_id = database_row[0]
+    a = database_row[1] #nafn bæjar
+    b = database_row[2] #árin
+    c = database_row[3] #ábúendur
     d = len(b)
     #print(d)
     for i in range(0, len(b)):
@@ -149,17 +138,12 @@ def get_fams(database_row):
         elif (b[n] in ('', None, ' ','  ')
               and c[n] in ('', None, ' ','  ')
               and n > 0): #báðar tómar, gögn í línum fyrir ofan
-            return_rows.append([a, b[:n], c[:n]])
+            return_rows.append([area_id, a, b[:n], c[:n]])
             b = b[n:] #taka út það sem búið er að bæta við sem fjölla
             c = c[n:]
             n = 0 #byrja nýja fjölluskráningu
         else:
             n +=1 #gögn á línunni, halda áfram að skrolla niður
-
-
-        #return_rows.append([a, b[items 0-counter], c[items 0-counter]])
-        #del items 0-counter in list b and c
-
     return return_rows
 
 
@@ -202,15 +186,10 @@ def main():
             year_blob = [ws.cell(row=i, column=b).value for i in range(2, ws.max_row)]
             name_blob = [ws.cell(row=i, column=b+1).value for i in range(2, ws.max_row)]
             sql_insert = [ws.title, id, data_cleaned[0], str(year_blob), str(name_blob)]
-            full_list.append([data_cleaned[0], year_blob, name_blob])
-            #while len(year_blob) > 0:
-            #    sql_insert = [ws.title, id, data_cleaned[0], year_blob[0], name_blob[0]]
-            #print(full_list)
+            full_list.append([id, data_cleaned[0], year_blob, name_blob])
+
             with con:
                 cur.execute('INSERT INTO FARM_NAMES (AREA_NAME, AREA_ID, FARM_NAME, YEAR_DATA, NAME_DATA) VALUES (?,?,?,?,?)', sql_insert)
-            #del year_blob[0]
-            #del name_blob[0]
-            # con.commit()
             del data_cleaned[0]
             del new_list[0]
         n += 1
@@ -258,24 +237,16 @@ def main():
         full_list= nafn bæjar, ár_blob, nafn_blob
         get_fams: Tekur við bæjarnafn og 2 blobba. Skilar af sér bæjarnafnið og blob-bita flokkaða í tímabil og fjölskyldur
     """
-    #print(full_list[0])
-
-        #cur.execute("SELECT * FROM FARM_NAMES1")
-        #rows = cur.fetchall()
-        #for row in rows:
 
     #OBS: BREYTA FAM_NAME Í FAM_ID MEÐ ÞVÍ AÐ JOINA VIÐ AÐRA TÖFLU
 
-    #print(full_list[0])
     while len(full_list)>0:
         all_fams = get_fams(full_list[0])
 
         for i in range(0, len(all_fams)):
-            first_fam = [str(all_fams[i][0]), str(all_fams[i][1]), str(all_fams[i][2])]
+            first_fam = [str(all_fams[i][0]), str(all_fams[i][1]), str(all_fams[i][2]), str(all_fams[i][3])]
             with con:
-            #sql_insert = [ws.title, id, data_cleaned[0], str(year_blob), str(name_blob)]
-                cur.execute('INSERT INTO FARM_FAMILY (FARM_NAME, FAMILY_YEAR, FAMILY_DATA) VALUES (?,?,?)', first_fam)
-
+                cur.execute('INSERT INTO FARM_FAMILY (AREA_ID, FARM_NAME, FAMILY_YEAR, FAMILY_DATA) VALUES (?,?,?,?)', first_fam)
         del full_list[0]
 
 main()

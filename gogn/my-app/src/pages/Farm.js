@@ -43,8 +43,10 @@ render() {
     console.log('farm', farm)
     const name = farm && farm.farm_name ? farm.farm_name : '';
     const area = farm.area_name;
+
     const name_data = farm.name_data;
     const year_data = farm.year_data;
+
     //farm.map((farm) => {   //
        // const link = '/region/' + farm.area_id + '/farms/' + farm.farm_id + '/' + farm.farm_name;
        // return (
