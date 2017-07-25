@@ -104,6 +104,7 @@ def init_tables():
                   FAMILY_DATA TEXT);''')
 
         cur.execute('''CREATE TABLE IF NOT EXISTS FARM_FAMS1(
+                  AREA_ID INTEGER,
                   FARM_ID INTEGER,
                   FAMILY_ID INTEGER PRIMARY KEY,
                   FARM_NAME TEXT,
@@ -252,7 +253,8 @@ def main():
                 cur.execute('INSERT INTO FARM_FAMILY (AREA_ID, FARM_NAME, FAMILY_YEAR, FAMILY_DATA) VALUES (?,?,?,?)', first_fam)
         del full_list[0]
     with con:
-        cur.execute("SELECT FARM_NAMES.FARM_ID,"
+        cur.execute("SELECT FARM_FAMILY.AREA_ID,"
+                    "FARM_NAMES.FARM_ID,"
                     "FARM_FAMILY.FAMILY_ID,"
                     "FARM_FAMILY.FARM_NAME,"
                     "FARM_FAMILY.FAMILY_YEAR,"
@@ -265,7 +267,7 @@ def main():
 
         rows = cur.fetchall()
         for row in rows:
-            cur.execute('INSERT INTO FARM_FAMS1 (FARM_ID, FAMILY_ID, FARM_NAME, FAMILY_YEAR, FAMILY_DATA) VALUES (?,?,?,?,?)', row)
+            cur.execute('INSERT INTO FARM_FAMS1 (AREA_ID, FARM_ID, FAMILY_ID, FARM_NAME, FAMILY_YEAR, FAMILY_DATA) VALUES (?,?,?,?,?,?)', row)
 
 
 main()

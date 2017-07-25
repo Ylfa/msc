@@ -39,6 +39,7 @@ class farm_family(db.Model):
                     #    "Address.city=='Boston')")
 
 class farm_fams1(db.Model):
+    area_id = Column(Integer, unique=False)
     farm_id = Column(Integer, unique=False)
     family_id = Column(Integer, primary_key=True)
     farm_name = Column(Text, unique=False)
