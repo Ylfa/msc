@@ -47,22 +47,27 @@ render() {
     const name_data = farm.family_data;
     const year_data = farm.family_year;
 
-    const list = farm.map((farm) => {
+    const list = farm.family_id;
+  /*  const list = farm.map((farm) => {
         return (
            <li key={farm.family_id}>
                <h4>Bær: {farm.farm_name} ártal: {farm.family_year} fjölla: {farm.family_data}</h4>
         )
-    })
+    })*/
     return (
         <div>
             <h2>Bær {name} Svæði: {area}</h2>
 
 
-        <br/><li className="List">{list}</li>
+            <br/>
+                <ul className="List">
+                    {list}
+                </ul>
 
-        <br/>{error ? (<p>Villa við að sækja gögn!</p>) : null}
+        <br/>
+            {error ? (<p>Villa við að sækja gögn!</p>) : null}
         <Link to="/">Tilbaka</Link>
-      </div>
+        </div>
     );
   }
 }

@@ -40,14 +40,16 @@ def init_tables():
 
 
 
-
+#Tilraun í gangi hér. Prófa að bæta við family_id í farm_names1 og þannig fá öll gögn sem þarf þar
         cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES1(
                   AREA_ID INTEGER,
                   FARM_ID INTEGER PRIMARY KEY,
                   AREA_NAME TEXT,
                   FARM_NAME TEXT,
-                  YEAR_DATA BLOB,
-                  NAME_DATA BLOB);''')
+                  YEAR_DATA TEXT,
+                  NAME_DATA TEXT);''')
+
+
         cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES2(
                           AREA_ID INTEGER,
                           FARM_ID INTEGER PRIMARY KEY,
@@ -268,6 +270,12 @@ def main():
         rows = cur.fetchall()
         for row in rows:
             cur.execute('INSERT INTO FARM_FAMS1 (AREA_ID, FARM_ID, FAMILY_ID, FARM_NAME, FAMILY_YEAR, FAMILY_DATA) VALUES (?,?,?,?,?,?)', row)
+
+#Tilraun..... Bætt inn family_id og raðir í farm_names1 af því að sú tafla virkar eins og er.
+
+         #   cur.execute("SELECT FARM_FAMS1.FAMILY_ID,"
+         #               "FARM_FAMS1.FARM_ID")
+
 
 
 main()
