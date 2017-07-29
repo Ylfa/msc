@@ -1,61 +1,46 @@
 # Þetta les excel skjal og færir gögnin yfir í gagnagrunn
 
-## Skoða næsta skref - Flask
-
-####################### EXCEL #################################
 from openpyxl import load_workbook, worksheet
-# from openpyxl.styles import Font #sjá bold=True
-
-####################### SQLITE  ################################
+import json
+import datetime
 import sqlite3 as lite
 import sys
 con = lite.connect('gogn.db')
 cur = con.cursor()
 
+def datetime_handler(x):
+    if isinstance(x, datetime.datetime):
+        return x.isoformat()
+    raise TypeError("Unknown type")
+
 
 def init_tables():
     print("Database start")
     with con:
+        cur.execute('''DROP TABLE IF EXISTS AREA_ID''')
         cur.execute('''DROP TABLE IF EXISTS FARM_NAMES''')
         cur.execute('''DROP TABLE IF EXISTS FARM_FAMILY''')
-        cur.execute('''DROP TABLE IF EXISTS FARM_FAMS1''')
-        cur.execute('''DROP TABLE IF EXISTS AREA_ID''')
-        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES1''')
-        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES2''')
-        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES3''')
-        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES4''')
-        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES5''')
-        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES6''')
-        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES7''')
+        cur.execute('''DROP TABLE IF EXISTS FARM_ID''')
+        cur.execute('''DROP TABLE IF EXISTS FAMILY_ID''')
 
-        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_NAMES(
+        cur.execute('''CREATE TABLE IF NOT EXISTS AREA_ID(
+                  AREA_ID INTEGER primary key autoincrement,
+                  AREA_NAME TEXT);''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_ID(
           AREA_ID INTEGER,
           FARM_ID INTEGER primary key autoincrement,
           AREA_NAME TEXT,
-          FARM_NAME TEXT,
-          YEAR_DATA BLOB,
-          NAME_DATA BLOB);''')
-        cur.execute('''CREATE TABLE IF NOT EXISTS AREA_ID(
-          AREA_ID INTEGER primary key autoincrement,
-          AREA_NAME TEXT);''')
-
-        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_FAMILY(
+          FARM_NAME TEXT);''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS FAMILY_ID(
                   FAMILY_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                   FARM_ID INTEGER,
                   AREA_ID INTEGER,
+                  AREA_NAME TEXT,
                   FARM_NAME TEXT,
                   FAMILY_YEAR TEXT,
                   FAMILY_DATA TEXT);''')
+        return "Database init done."
 
-        cur.execute('''CREATE TABLE IF NOT EXISTS FARM_FAMS1(
-                  AREA_ID INTEGER,
-                  FARM_ID INTEGER,
-                  FAMILY_ID INTEGER PRIMARY KEY,
-                  FARM_NAME TEXT,
-                  FAMILY_YEAR TEXT,
-                  FAMILY_DATA TEXT);''')
-
-    return "Database init done."
 
 def get_fams(database_row):
     """
@@ -72,10 +57,9 @@ def get_fams(database_row):
     b = database_row[2] #árin
     c = database_row[3] #ábúendur
     farmnr = database_row[4] #farm_id
+    area_name = database_row[5]
     d = len(b)
-    #print(d)
     for i in range(0, len(b)):
-        #print(n)
         if (b[0] in ('', None, ' ','  ')
             and c[0] in ('', None, ' ','  ')
             and n == 0): #báðar fyrstu línur tómar í blobbum, og ekkert fyrir ofan
@@ -84,7 +68,7 @@ def get_fams(database_row):
         elif (b[n] in ('', None, ' ','  ')
               and c[n] in ('', None, ' ','  ')
               and n > 0): #báðar tómar, gögn í línum fyrir ofan
-            return_rows.append([area_id, a, b[:n], c[:n], farmnr])
+            return_rows.append([area_id, a, b[:n], c[:n], farmnr, area_name])
             b = b[n:] #taka út það sem búið er að bæta við sem fjölla
             c = c[n:]
             n = 0 #byrja nýja fjölluskráningu
@@ -131,12 +115,13 @@ def main():
             b = new_list[0][0]
             year_blob = [ws.cell(row=i, column=b).value for i in range(2, ws.max_row)]
             name_blob = [ws.cell(row=i, column=b+1).value for i in range(2, ws.max_row)]
-            sql_insert = [ws.title, id, data_cleaned[0], str(year_blob), str(name_blob)]
+            sql_insert = [ws.title, id, data_cleaned[0]]
 
-            full_list.append([id, data_cleaned[0], year_blob, name_blob, farm_counter])
+            full_list.append([id, data_cleaned[0], year_blob, name_blob, farm_counter, ws.title])
 
             with con:
-                cur.execute('INSERT INTO FARM_NAMES (AREA_NAME, AREA_ID, FARM_NAME, YEAR_DATA, NAME_DATA) VALUES (?,?,?,?,?)', sql_insert)
+                cur.execute('INSERT INTO FARM_ID (AREA_NAME, AREA_ID, FARM_NAME) '
+                            'VALUES (?,?,?)', sql_insert)
             del data_cleaned[0]
             del new_list[0]
             farm_counter += 1
@@ -145,14 +130,19 @@ def main():
         ws = wb.worksheets[n]
         sheet_names.pop(0)
 
-
     while len(full_list)>0:
         all_fams = get_fams(full_list[0])
-
+#json.dumps(anObject, )
         for i in range(0, len(all_fams)):
-            first_fam = [str(all_fams[i][0]), str(all_fams[i][1]), str(all_fams[i][2]), str(all_fams[i][3]), str(all_fams[i][4])]
+            j2 = j3 = {}
+            j2 = json.dumps(all_fams[i][2], default=datetime_handler)
+            j3 = json.dumps(all_fams[i][3], default=datetime_handler)
+            first_fam = [str(all_fams[i][0]), str(all_fams[i][1]),
+                         str(j2), str(j3), str(all_fams[i][4]),
+                         str(all_fams[i][5])]
             with con:
-                cur.execute('INSERT INTO FARM_FAMILY (AREA_ID, FARM_NAME, FAMILY_YEAR, FAMILY_DATA, FARM_ID) VALUES (?,?,?,?,?)', first_fam)
+                cur.execute('INSERT INTO FAMILY_ID (AREA_ID, FARM_NAME, FAMILY_YEAR, FAMILY_DATA, FARM_ID, AREA_NAME) '
+                            'VALUES (?,?,?,?,?,?)', first_fam)
         del full_list[0]
 
 main()
