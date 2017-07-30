@@ -20,6 +20,7 @@ def init_tables():
         cur.execute('''DROP TABLE IF EXISTS AREA_ID''')
         cur.execute('''DROP TABLE IF EXISTS FARM_ID''')
         cur.execute('''DROP TABLE IF EXISTS FAMILY_ID''')
+        cur.execute('''DROP TABLE IF EXISTS TIME_SPANS''')
 
         cur.execute('''CREATE TABLE IF NOT EXISTS AREA_ID(
                   AREA_ID INTEGER primary key autoincrement,
@@ -42,7 +43,22 @@ def init_tables():
                   FAMILY_DATA TEXT,
                   FOREIGN KEY (AREA_ID) REFERENCES AREA_ID(AREA_ID),
                   FOREIGN KEY (FARM_ID) REFERENCES FARM_ID(FARM_ID));''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS TIME_SPANS(
+          FAMILY_ID INTEGER PRIMARY KEY,
+          TIME_FROM INTEGER,
+          TIME_TO INTEGER,
+          REST TEXT,
+          FOREIGN KEY (FAMILY_ID) REFERENCES FAMILY_ID(FAMILY_ID));''')
         return "Database init done."
+
+def add_dash(year_blob):
+    #"1234    1234" -> "1234 - 1234"
+    years = year_blob[0] #af því að árin eru fyrsta element listanna
+    x = str(years)
+    x = x.split(' ',1)
+    x = ' -'.join(x)
+    year_blob[0] = x
+    return year_blob
 
 
 def get_fams(database_row):
@@ -53,7 +69,6 @@ def get_fams(database_row):
     b = database_row[2] #árin
     c = database_row[3] #ábúendur
     farmnr = database_row[4] #farm_id
-    #print(farmnr)
     area_name = database_row[5]
     d = len(b)
     for i in range(0, len(b)):
@@ -126,21 +141,27 @@ def main():
         id += 1
         ws = wb.worksheets[n]
         sheet_names.pop(0)
-        #print(full_list[4])
 
     while len(full_list)>0:
         all_fams = get_fams(full_list[0])
-#json.dumps(anObject, )
+
+        #json.dumps(anObject, )
         for i in range(0, len(all_fams)):
+            dashed_years = add_dash(all_fams[i][2])
             j2 = j3 = {}
-            j2 = json.dumps(all_fams[i][2], default=datetime_handler)
-            j3 = json.dumps(all_fams[i][3], default=datetime_handler)
+            j2 = json.dumps(dashed_years, default=datetime_handler) #family_year
+            j3 = json.dumps(all_fams[i][3], default=datetime_handler) #family_data
+
             first_fam = [str(all_fams[i][0]), str(all_fams[i][1]),
                          str(j2), str(j3), str(all_fams[i][4]),
                          str(all_fams[i][5])]
             with con:
-                cur.execute('INSERT INTO FAMILY_ID (AREA_ID, FARM_NAME, FAMILY_YEAR, FAMILY_DATA, FARM_ID, AREA_NAME) '
+                cur.execute('INSERT INTO FAMILY_ID (AREA_ID, FARM_NAME, '
+                            'FAMILY_YEAR, FAMILY_DATA, FARM_ID, AREA_NAME)'
                             'VALUES (?,?,?,?,?,?)', first_fam)
         del full_list[0]
+    #Update family_year column. Take first element, clean it, re-insert it.
+
+
 
 main()
