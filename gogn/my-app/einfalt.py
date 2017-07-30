@@ -18,19 +18,20 @@ def init_tables():
     print("Database start")
     with con:
         cur.execute('''DROP TABLE IF EXISTS AREA_ID''')
-        cur.execute('''DROP TABLE IF EXISTS FARM_NAMES''')
-        cur.execute('''DROP TABLE IF EXISTS FARM_FAMILY''')
         cur.execute('''DROP TABLE IF EXISTS FARM_ID''')
         cur.execute('''DROP TABLE IF EXISTS FAMILY_ID''')
 
         cur.execute('''CREATE TABLE IF NOT EXISTS AREA_ID(
                   AREA_ID INTEGER primary key autoincrement,
                   AREA_NAME TEXT);''')
+
         cur.execute('''CREATE TABLE IF NOT EXISTS FARM_ID(
           AREA_ID INTEGER,
           FARM_ID INTEGER primary key autoincrement,
           AREA_NAME TEXT,
-          FARM_NAME TEXT);''')
+          FARM_NAME TEXT,
+          FOREIGN KEY (AREA_ID) REFERENCES AREA_ID(AREA_ID));''')
+
         cur.execute('''CREATE TABLE IF NOT EXISTS FAMILY_ID(
                   FAMILY_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                   FARM_ID INTEGER,
@@ -38,18 +39,13 @@ def init_tables():
                   AREA_NAME TEXT,
                   FARM_NAME TEXT,
                   FAMILY_YEAR TEXT,
-                  FAMILY_DATA TEXT);''')
+                  FAMILY_DATA TEXT,
+                  FOREIGN KEY (AREA_ID) REFERENCES AREA_ID(AREA_ID),
+                  FOREIGN KEY (FARM_ID) REFERENCES FARM_ID(FARM_ID));''')
         return "Database init done."
 
 
 def get_fams(database_row):
-    """
-    Iterate through the list of names in order to group names into families.
-    :param row: One row, one farm containing [farm_name, year_data blob, name_data blob]
-    :return: [[farm_name, yr1, fam1],[farm_name, yr2, fam2],[farm_name, yr3, fam3]]
-    - Editable web by login: Edit in excel or database?
-    """
-
     return_rows = []
     n = 0
     area_id = database_row[0]
@@ -57,6 +53,7 @@ def get_fams(database_row):
     b = database_row[2] #árin
     c = database_row[3] #ábúendur
     farmnr = database_row[4] #farm_id
+    #print(farmnr)
     area_name = database_row[5]
     d = len(b)
     for i in range(0, len(b)):
@@ -99,14 +96,14 @@ def main():
     farm_counter = 1
     a = init_tables()
     print(a)
-
+    farm_counter = 1
     while len(sheet_names) > 1:
         data = [ws.cell(row=1, column=i).value for i in
                 range(ws.min_column, ws.max_column + 2)]
         new_list = get_farm_col(data)
         data_cleaned = [item for item in data if item not in (None, ' ', '  ')]
         area_id = ws.title
-        farm_counter = 1
+
         with con:
             cur.execute('INSERT INTO AREA_ID (AREA_NAME) VALUES (?)', (sheet_names[0],))
 
@@ -129,6 +126,7 @@ def main():
         id += 1
         ws = wb.worksheets[n]
         sheet_names.pop(0)
+        #print(full_list[4])
 
     while len(full_list)>0:
         all_fams = get_fams(full_list[0])

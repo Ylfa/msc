@@ -27,17 +27,16 @@ def add_cors_header(response):
 class area_id(db.Model):
     area_id = Column(Integer, primary_key=True)
     area_name = Column(Text, unique=True)
-    farms = relationship('farm_id')
+    farms = relationship('farm_id', primaryjoin="area_id.area_id==farm_id.area_id")
 
 
 class farm_id(db.Model):
     farm_id = Column(Integer, primary_key=True)
     area_id = Column(Integer, ForeignKey('area_id.area_id'))
-    #area_id = Column(Integer, unique=False)
     farm_name = Column(Text, unique=False)
     area_name = Column(Text, unique=False)
-    areas = relationship('area_id')
-    families = relationship('family_id')
+    fams = relationship('family_id', primaryjoin="farm_id.farm_id==family_id.farm_id")
+    area = relationship('area_id', primaryjoin="farm_id.area_id==area_id.area_id")
 
 
 class family_id(db.Model):
@@ -47,6 +46,9 @@ class family_id(db.Model):
     area_name = Column(Text, unique=False)
     family_data = Column(Text, unique=False)
     family_year = Column(Text, unique=False)
+    farm = relationship('farm_id', primaryjoin="farm_id.farm_id==family_id.farm_id")
+    area = relationship('area_id', primaryjoin="and_(area_id.area_id==family_id.area_id,"
+                                               "farm_id.area_id==family_id.area_id)")
 
 
 db.create_all()
@@ -65,12 +67,13 @@ if __name__ == "__main__":
 
 
 """
-Byrja á API. Eitt skref í einu, taka út 1-7, hafa sameiginlegt.
+Byrja á API. Eitt skref í einu, taka út 1-7, hafa sameiginlegt. CHECK!!
 Skoða: https://flask-restless.readthedocs.io/en/stable/customizing.html#custom-queries
+
+json parse fyrir str í töflu, import json, skoða: json.dumps CHECK!!!
 
 Lesa búta, þýða ár, spá í None línur
 
-json parse fyrir str í töflu, import json, skoða: json.dumps
 
-Skoða birtingu
+Skoða birtingu, loada? str í json aftur
 """
