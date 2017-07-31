@@ -54,10 +54,14 @@ def init_tables():
 def add_dash(year_blob):
     #"1234    1234" -> "1234 - 1234"
     years = year_blob[0] #af því að árin eru fyrsta element listanna
+    x_list = []
     x = str(years)
     x = x.split(' ',1)
     x = ' -'.join(x)
-    year_blob[0] = x
+    x = x.split(' ')
+    x_list = [data for data in x if data not in ('', '  ', None)]
+    x_list = ' '.join(x_list)
+    year_blob[0] = x_list
     return year_blob
 
 

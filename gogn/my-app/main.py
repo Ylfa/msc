@@ -72,8 +72,8 @@ Skoða: https://flask-restless.readthedocs.io/en/stable/customizing.html#custom-
 
 json parse fyrir str í töflu, import json, skoða: json.dumps CHECK!!!
 
-Lesa búta, þýða ár, spá í None línur
-
+Lesa búta, þýða ár línur CHECK. held ég...
+Spá í None bilum í ártalalista fjölskyldubúta
 
 Skoða birtingu, loada? str í json aftur
 """
