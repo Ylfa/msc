@@ -17,6 +17,7 @@ class Home extends Component {
                 <nav>
                     <ul>
                         <li><Link to="/about">Um verkefnið - Home</Link></li>
+                        Bledible
                     </ul>
                 </nav>
 
