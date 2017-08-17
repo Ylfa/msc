@@ -148,8 +148,6 @@ def main():
 
     while len(full_list)>0:
         all_fams = get_fams(full_list[0])
-
-        #json.dumps(anObject, )
         for i in range(0, len(all_fams)):
             dashed_years = add_dash(all_fams[i][2])
             j2 = j3 = {}
@@ -164,8 +162,6 @@ def main():
                             'FAMILY_YEAR, FAMILY_DATA, FARM_ID, AREA_NAME)'
                             'VALUES (?,?,?,?,?,?)', first_fam)
         del full_list[0]
-    #Update family_year column. Take first element, clean it, re-insert it.
-
 
 
 main()

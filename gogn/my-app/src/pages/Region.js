@@ -32,7 +32,8 @@ class Region extends Component {
         .then((data) => {
             console.log('data', data);
             this.setState({
-                region: data.objects,
+//                region: data.object,
+                region: data,
 
             });
         })
@@ -46,15 +47,16 @@ class Region extends Component {
 
 
   render() {
-//      if (this.state.region) {
           const {region, error} = this.state;
           console.log(region);
-          const list = (region || []).map((region) => {
-              const link = '/region/' + region.id + '/farm/' + region.farm_id;
+          //var a = JSON.parseJSON(region.farms);
+
+          const list = (region.farms || []).map((farm) => {
+              const link = '/region/'+farm.area_id+'/farm/' + farm.farm_id; //BREYTTI HÉR Í AÐ TAKA ÚT REGION
 
               return (
-                  <li key={region.farm_id}><Link to={link}>Hreppur: {region.area_name} -
-                      <bold>Bær:</bold>{region.farm_name} </Link></li>
+                  <li key={farm.farm_id}><Link to={link}>Hreppur: {region.area_name} -
+                      <bold>Bær:</bold>{farm.farm_name} </Link></li>
               );
           })
 
@@ -69,12 +71,8 @@ class Region extends Component {
                   <Link to="/">Til baka</Link>
               </div>
           );
-      }
- // }
-
-
+  }
 }
 
-export default Region;
 
-//render() { if(this.state.region) { ...}
+export default Region;

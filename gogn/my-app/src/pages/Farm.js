@@ -12,19 +12,24 @@ class Farm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        farm: {}
+        farm: []
     }
   }
   componentDidMount() {
     //const regionid = this.props.match.params.areaid;
-    const farmid = this.props.match.params.farmid;
-    this.fetchData(farmid); //(regionid, farmid);
+    const id = this.props.match.params.farmid;
+    console.log('id', id);
+    this.fetchData(id); //(regionid, farmid);
   }
-  fetchData(farmid) {
-      fetch('http://localhost:5000/api/farm_id/' + farmid)
+
+
+  fetchData(id) {
+      //api?area=6&family=7
+      //sida.is/area/
+      fetch('http://localhost:5000/api/farm_id/'+id)
         .then(response => response.json())
         .then((data) => {
-            console.log('data', data);
+            console.log('data farm', data);
             this.setState({
                 farm: data,
             });
@@ -36,26 +41,25 @@ class Farm extends Component {
               })
           });
   }
-render() {
+
+  render() {
     const { farm, error } = this.state;
-    console.log('farm', farm)
-    const name = farm && farm.farm_name ? farm.farm_name : '';
-    const area = farm.area_name;
+    console.log(farm);
+    const list = (farm.fams || []).map((fam) => {
+        const link = '/region/'+farm.area_id+'/farm/' + farm.farm_id; // + '/family/' + fams.family_id; BETRA MEÐ AÐ ÞAÐ FLETTIST STÆRRA ÚT
+        //
 
-    const name_data = farm.family_data;
-    const year_data = farm.family_year;
-    const list = farm.map((farm));
-
- /*   const list = farm.map((farm)) => {
-        const link = '/region/' + farm.area_id + '/farm/' + farm.farm_id;
         return (
-           <li key={farm.family_id}>
-               <h4>Bær: {farm.farm_name} ártal: {farm.family_year} fjölla: {farm.family_data}</h4>
-        )
-})*/
+            <li key={fam.family_id}><Link to={link}>{farm.area_name},
+                {farm.farm_name}<br/>
+                <bold></bold> {JSON.parse(fam.family_year)} <br/> {JSON.parse(fam.family_data)}<br/>
+                <bold></bold>  <br/></Link></li>
+        );
+    })
+
+
     return (
         <div>
-            <h2> Svæði: {area} Bær {name} Tímabil: {year_data} Ábúendur: {name_data}</h2>
             <br/>
                 <ul className="List">
                     {list}
