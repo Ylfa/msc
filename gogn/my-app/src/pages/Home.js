@@ -12,12 +12,12 @@ class Home extends Component {
     render() {
         return (
             <div>
-                <h1>Svæðin Home</h1>
+
                 <Regions />
                 <nav>
                     <ul>
                         <li><Link to="/about">Um verkefnið - Home</Link></li>
-                        Bledible
+
                     </ul>
                 </nav>
 

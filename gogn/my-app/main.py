@@ -27,7 +27,6 @@ def add_cors_header(response):
 class area_id(db.Model):
     area_id = Column(Integer, primary_key=True)
     area_name = Column(Text, unique=True)
-    #farm_name = relationship('farm_name', primaryjoin="area_id.area_id==farm_id.area_id")
     farms = relationship('farm_id', primaryjoin="area_id.area_id==farm_id.area_id")
 
 
@@ -37,7 +36,6 @@ class farm_id(db.Model):
     farm_name = Column(Text, unique=False)
     area_name = Column(Text, unique=False)
     fams = relationship('family_id', primaryjoin="farm_id.farm_id==family_id.farm_id")
-#    area = relationship('area_id', primaryjoin="farm_id.area_id==area_id.area_id")
 
 
 class family_id(db.Model):
