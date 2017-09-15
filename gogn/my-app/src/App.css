@@ -5,6 +5,68 @@ html {
   text-align: left;
 }
 
+/*.navigation {
+    float: left;
+    width: 300px;
+}
+
+/*.mainmenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+*/
+.mainmenu a {
+  display: block;
+  text-decoration: none;
+  padding: 12px;
+  float: left;
+}
+
+.mainmenu a:hover {
+  background-color: #C5C5C5;
+}
+
+.mainmenu {
+    overflow: auto;
+    display: block;
+    padding: 2px;
+    background-color: lightgrey;
+}
+
+/*
+.Years {
+    float: left;
+}
+
+.Names {
+    float: left;
+}
+*/
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+}
+/*
+li a {
+    float: left;
+}*/
+
+h2{
+  overflow: auto;
+}
+
+h2 span{
+  float: left;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+h2 img{
+  float: left;
+}
 
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
@@ -15,8 +77,8 @@ html {
 
 .App-header {
   background-color: seagreen;
-  height: 100px;
-  padding: 20px;
+  height: 90px;
+  padding: 10px;
   color: black;
 }
 
@@ -36,4 +98,69 @@ html {
 .link-list a {
   text-decoration: none;
   font-weight: bold;
+}
+.parent
+{
+	width:100%;
+}
+.left
+{
+	float:left;
+	width:50%;
+	box-sizing:border-box;
+	padding:5px;
+	border:#CCC solid 1px;
+	min-height:200px;
+}
+
+.right
+{
+	float:left;
+	width:50%;
+	box-sizing:border-box;
+	padding:5px;
+	border:#CCC solid 1px;
+	min-height:200px;
+}
+
+form {
+  margin: 0 auto;
+  width: 450px;
+  padding: 1em;
+  border: 1px solid #CCC;
+  border-radius: 1em;
+}
+
+form div + div {
+  margin-top: 1em;
+}
+
+label {
+  display: inline-block;
+  width: 120px;
+  text-align: right;
+}
+
+input, textarea {
+  font: 1em sans-serif;
+  width: 300px;
+  box-sizing: border-box;
+  border: 1px solid #999;
+}
+
+input:focus, textarea:focus {
+  border-color: #000;
+}
+
+textarea {
+  vertical-align: top;
+  height: 6em;
+}
+
+.button {
+  padding-left: 120px;
+}
+
+button {
+  margin-left: .5em;
 }

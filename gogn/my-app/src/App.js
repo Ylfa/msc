@@ -11,24 +11,38 @@ import Home from './pages/Home.js';
 import Region from './pages/Region.js';
 import Farm from './pages/Farm.js';
 import About from './pages/About.js';
-import Regions from './pages/Regions.js';
+import Samband from './pages/Samband.js';
+import Skammstafanir from './pages/Skammstafanir.js';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Ábúendatal Austur-Húnavatnssýslu</h2>
+          <h2>
+              <img src={logo} className="App-logo" alt="logo" />
+              <span> Ábúendatal Austur-Húnavatnssýslu</span>
+          </h2>
         </div>
-        <div className="App-intro">
+            <nav className="navigation">
+                <ul className="mainmenu">
+                    <li><a href="/">Hreppir</a></li>
+                    <li><a href="/Skammstafanir">Skammstafanir</a></li>
+                    <li><a href="/about">Um verkefnið</a></li>
+                    <li><a href="/Samband">Hafa samband</a></li>
+                </ul>
+            </nav>
+
+
+          <div className="App-intro">
             <Router>
                 <div>
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/region/:id" component={Region}/>
                     <Route path="/region/:regionid/farm/:farmid" component={Farm}/>
                     <Route path="/about" component={About}/>
-                    /*<Route path="/about/region/:regionid/farm/:farmid/:familyid" component={Regions}/>*/
+                    <Route path="/Samband" component={Samband}/>
+                    <Route path="/Skammstafanir" component={Skammstafanir}/>
                 </div>
             </Router>
         </div>

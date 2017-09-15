@@ -21,7 +21,8 @@ def init_tables():
         cur.execute('''DROP TABLE IF EXISTS FARM_ID''')
         cur.execute('''DROP TABLE IF EXISTS FAMILY_ID''')
         cur.execute('''DROP TABLE IF EXISTS TIME_SPANS''')
-
+        cur.execute('''DROP TABLE IF EXISTS SKAMMSTAFANIR''')
+        cur.execute('''DROP TABLE IF EXISTS PERSON_ID''')
         cur.execute('''CREATE TABLE IF NOT EXISTS AREA_ID(
                   AREA_ID INTEGER primary key autoincrement,
                   AREA_NAME TEXT);''')
@@ -43,12 +44,28 @@ def init_tables():
                   FAMILY_DATA TEXT,
                   FOREIGN KEY (AREA_ID) REFERENCES AREA_ID(AREA_ID),
                   FOREIGN KEY (FARM_ID) REFERENCES FARM_ID(FARM_ID));''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS PERSON_ID(
+                                  PERSON_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                                  FAMILY_ID INTEGER,
+                                  FARM_ID INTEGER,
+                                  AREA_ID INTEGER,
+                                  AREA_NAME TEXT,
+                                  FARM_NAME TEXT,
+                                  FAMILY_YEAR TEXT,
+                                  FAMILY_DATA TEXT,
+                                  FOREIGN KEY (AREA_ID) REFERENCES AREA_ID(AREA_ID),
+                                  FOREIGN KEY (FARM_ID) REFERENCES FARM_ID(FARM_ID),
+                                  FOREIGN KEY (FAMILY_ID) REFERENCES FAMILY_ID(FAMILY_ID));''')
         cur.execute('''CREATE TABLE IF NOT EXISTS TIME_SPANS(
           FAMILY_ID INTEGER PRIMARY KEY,
           TIME_FROM INTEGER,
           TIME_TO INTEGER,
           REST TEXT,
           FOREIGN KEY (FAMILY_ID) REFERENCES FAMILY_ID(FAMILY_ID));''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS SKAMMSTAFANIR(
+          LYKILL INTEGER PRIMARY KEY AUTOINCREMENT,
+          SKM TEXT,
+          FULL_NAME TEXT);''')
         return "Database init done."
 
 def add_dash(year_blob):
@@ -103,11 +120,56 @@ def get_farm_col(list):
     data_list = [data for data in data_list if data[1] not in (' ', '  ', None)]
     return data_list
 
+def create_Skammstafanir():
+    #Create table Skammstafanir from Exceldocument Skammstafanir
+
+    wb2 = load_workbook(filename='Skammstafanir-2.xlsx')
+    data = wb2.worksheets[0]
+    data1=data2=[0] #two rows, skm + value
+    i=j=1
+    data1 = [data.cell(row=i, column=1).value for i in range(1, data.max_row)]
+    data2 = [data.cell(row=j, column=2).value for j in range(1, data.max_row)]
+    resulting=[] #= [a.append(b) for a, b in zip(data1, data2)]
+    i=0
+    result = list(zip(data1, data2))
+
+    while len(resulting)>0:
+        insert_result = resulting[0]
+        with con:
+            cur.execute('INSERT INTO SKAMMSTAFANIR (SKM, FULL_NAME) VALUES (?,?)', insert_result)
+        del resulting[0]
+    return
+
+def populate_persons(family):
+    i=j=0
+    for i in range(0, len(family[3])):
+       a = family[0]
+       b = family[1]
+       c = family[2]
+       d = json.dumps(family[3][j], default=datetime_handler)
+       e = json.dumps(family[4][j], default=datetime_handler)
+       f = family[5]
+       g = family[6]
+       first_person = [str(a),
+                        str(b),
+                        str(c),
+                        str(d),
+                        str(e),
+                        str(f),
+                        str(g)]
+       with con:
+            cur.execute('INSERT INTO PERSON_ID (FAMILY_ID, AREA_ID, FARM_NAME, '
+                        'FAMILY_YEAR, FAMILY_DATA, FARM_ID, AREA_NAME)'
+                        'VALUES (?,?,?,?,?,?,?)', first_person)
+       j += 1
+    return
+
 
 def main():
     n = 0
     id = 1
     wb = load_workbook(filename='Vinnuskjal1.xlsx')
+    e_id = 1
     ws = wb.worksheets[n]
     area_one = []
     full_list=[]
@@ -115,6 +177,7 @@ def main():
     farm_counter = 1
     a = init_tables()
     print(a)
+    create_Skammstafanir()
     farm_counter = 1
     while len(sheet_names) > 1:
         data = [ws.cell(row=1, column=i).value for i in
@@ -150,10 +213,21 @@ def main():
         all_fams = get_fams(full_list[0])
         for i in range(0, len(all_fams)):
             dashed_years = add_dash(all_fams[i][2])
-            j2 = j3 = {}
-            j2 = json.dumps(dashed_years, default=datetime_handler) #family_year
+            j2 = j3 = e2 = e3 = {}
+            j2 = json.dumps(dashed_years, default=datetime_handler) #family_year x2, one per family, one per einstakling
+            e2 = dashed_years
             j3 = json.dumps(all_fams[i][3], default=datetime_handler) #family_data
 
+            #e_fam should contain one value in all spots except e2 and i3 lists of persons. Those needs a row each in db
+            e_fam = [e_id, #family_id
+                     all_fams[i][0], #area_id
+                     all_fams[i][1], #farm_id
+                     e2,            #years_col + dash
+                     all_fams[i][3], #name_col
+                     all_fams[i][4], #farm_id
+                     all_fams[i][5]] #area_name
+            #print(e_fam)
+            populate_persons(e_fam)
             first_fam = [str(all_fams[i][0]), str(all_fams[i][1]),
                          str(j2), str(j3), str(all_fams[i][4]),
                          str(all_fams[i][5])]
@@ -161,6 +235,7 @@ def main():
                 cur.execute('INSERT INTO FAMILY_ID (AREA_ID, FARM_NAME, '
                             'FAMILY_YEAR, FAMILY_DATA, FARM_ID, AREA_NAME)'
                             'VALUES (?,?,?,?,?,?)', first_fam)
+            e_id += 1
         del full_list[0]
 
 

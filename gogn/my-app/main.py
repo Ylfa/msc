@@ -28,7 +28,11 @@ class area_id(db.Model):
     area_id = Column(Integer, primary_key=True)
     area_name = Column(Text, unique=True)
     farms = relationship('farm_id', primaryjoin="area_id.area_id==farm_id.area_id")
-
+"""""    fams = relationship('family_id', primaryjoin="and_(area_id.area_id==family_id.area_id,"
+                                               "farm_id.area_id==family_id.area_id,"
+                                                "farm_id.farm_id==family_id.farm_id,"
+                                                "farm_id.area_id==area_id.area_id)")
+"""
 
 class farm_id(db.Model):
     farm_id = Column(Integer, primary_key=True)
@@ -36,19 +40,43 @@ class farm_id(db.Model):
     farm_name = Column(Text, unique=False)
     area_name = Column(Text, unique=False)
     fams = relationship('family_id', primaryjoin="farm_id.farm_id==family_id.farm_id")
-
+    persons = relationship('person_id', primaryjoin="and_(farm_id.farm_id==person_id.farm_id,"
+                                                    "farm_id.farm_id==family_id.farm_id,"
+                                                    "family_id.farm_id==person_id.farm_id)")
 
 class family_id(db.Model):
     family_id = Column(Integer, primary_key=True)
     farm_id = Column(Integer, ForeignKey('farm_id.farm_id'))
     area_id = Column(Integer, ForeignKey('area_id.area_id'))
     area_name = Column(Text, unique=False)
-    family_data = Column(Text, unique=False)
-    family_year = Column(Text, unique=False)
+    #family_data = Column(Text, unique=False)
+    #family_year = Column(Text, unique=False)
     farm = relationship('farm_id', primaryjoin="farm_id.farm_id==family_id.farm_id")
     area = relationship('area_id', primaryjoin="and_(area_id.area_id==family_id.area_id,"
                                                "farm_id.area_id==family_id.area_id)")
+    person = relationship('person_id', primaryjoin="family_id.family_id==person_id.family_id")
 
+class person_id(db.Model):
+    person_id = Column(Integer, primary_key=True)
+    family_id = Column(Integer, ForeignKey('family_id.family_id'))
+    farm_id = Column(Integer, ForeignKey('farm_id.farm_id'))
+    area_id = Column(Integer, ForeignKey('area_id.area_id'))
+    area_name = Column(Text, unique=False)
+    family_data = Column(Text, unique=False)
+    family_year = Column(Text, unique=False)
+    family = relationship('family_id', primaryjoin="person_id.family_id==family_id.family_id")
+    """farm = relationship('farm_id', primaryjoin="and_(person_id.farm_id==family_id.farm_id,"
+                                               "person_id.farm_id==farm_id.farm_id)")
+    area = relationship('area_id', primaryjoin="and_(area_id.area_id==family_id.area_id,"
+                                               "farm_id.area_id==family_id.area_id,"
+                                               "person_id.area_id==family_id.area_id)")
+"""
+
+
+class skammstafanir(db.Model):
+    lykill = Column(Integer, primary_key=True)
+    skm = Column(Text, unique=False)
+    full_name = Column(Text, unique=False)
 
 db.create_all()
 
@@ -56,6 +84,8 @@ api_manager = APIManager(app, flask_sqlalchemy_db=db)
 api_manager.create_api(area_id, methods=['POST', 'GET', 'DELETE', 'PUT'])
 api_manager.create_api(farm_id, methods=['POST', 'GET', 'DELETE', 'PUT'])
 api_manager.create_api(family_id, methods=['POST', 'GET', 'DELETE', 'PUT'])
+api_manager.create_api(person_id, methods=['POST', 'GET', 'DELETE', 'PUT'])
+api_manager.create_api(skammstafanir, methods=['POST', 'GET', 'DELETE', 'PUT'])
 
 app.after_request(add_cors_header)
 

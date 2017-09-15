@@ -14,12 +14,7 @@ class Home extends Component {
             <div>
 
                 <Regions />
-                <nav>
-                    <ul>
-                        <li><Link to="/about">Um verkefnið - Home</Link></li>
 
-                    </ul>
-                </nav>
 
             </div>
         );

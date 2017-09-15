@@ -55,14 +55,13 @@ class Region extends Component {
               const link = '/region/'+farm.area_id+'/farm/' + farm.farm_id; //BREYTTI HÉR Í AÐ TAKA ÚT REGION
 
               return (
-                  <li key={farm.farm_id}><Link to={link}> {region.area_name} -
-                      <bold></bold>{farm.farm_name} </Link></li>
+                  <li key={farm.farm_id}><Link to={link}><bold></bold>{farm.farm_name} </Link></li>
               );
           })
 
           return (
               <div>
-                  <h2>Svæði: </h2>
+                  <h2>{region.area_name} </h2>
                   <br/>
                   {error ? (<p>Villa við að sækja gögn!</p>) : null}
                   <ul className="link-list">

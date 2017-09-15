@@ -54,7 +54,6 @@ class Regions extends Component {
 
     return (
       <div>
-        <h2>Svæði:</h2>
           {error ? (<p>Villa við að sækja gögn!</p>) : null}
         <ul className="link-list">
           {list}
