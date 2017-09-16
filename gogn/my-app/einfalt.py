@@ -124,21 +124,26 @@ def create_Skammstafanir():
     #Create table Skammstafanir from Exceldocument Skammstafanir
 
     wb2 = load_workbook(filename='Skammstafanir-2.xlsx')
+
     data = wb2.worksheets[0]
+
     data1=data2=[0] #two rows, skm + value
     i=j=1
     data1 = [data.cell(row=i, column=1).value for i in range(1, data.max_row)]
+    #print(data1)
     data2 = [data.cell(row=j, column=2).value for j in range(1, data.max_row)]
     resulting=[] #= [a.append(b) for a, b in zip(data1, data2)]
     i=0
-    result = list(zip(data1, data2))
+    d1 = json.dumps(data1, default=datetime_handler)
+    d2 = json.dumps(data2, default=datetime_handler)
+    resulting = list(zip(data1, data2))
 
     while len(resulting)>0:
         insert_result = resulting[0]
         with con:
             cur.execute('INSERT INTO SKAMMSTAFANIR (SKM, FULL_NAME) VALUES (?,?)', insert_result)
         del resulting[0]
-    return
+    return "skammstafanir ok"
 
 def populate_persons(family):
     i=j=0

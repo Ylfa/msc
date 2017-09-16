@@ -49,10 +49,9 @@ class Region extends Component {
   render() {
           const {region, error} = this.state;
           console.log(region);
-          //var a = JSON.parseJSON(region.farms);
-
           const list = (region.farms || []).map((farm) => {
-              const link = '/region/'+farm.area_id+'/farm/' + farm.farm_id; //BREYTTI HÉR Í AÐ TAKA ÚT REGION
+
+              const link = '/region/'+farm.area_id+'/farm/' + farm.farm_id;
 
               return (
                   <li key={farm.farm_id}><Link to={link}><bold></bold>{farm.farm_name} </Link></li>
@@ -67,6 +66,7 @@ class Region extends Component {
                   <ul className="link-list">
                       {list}
                   </ul>
+                  <br/>
                   <Link to="/">Til baka</Link>
               </div>
           );

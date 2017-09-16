@@ -101,7 +101,7 @@ h2 img{
 
 form {
   margin: 0 auto;
-  width: 450px;
+  width: 650px;
   padding: 1em;
   border: 1px solid #CCC;
   border-radius: 1em;
@@ -117,11 +117,19 @@ label {
   text-align: right;
 }
 
+.FarmTable {
+    width: 300px;
+    float: left;
+    padding: 0;
+    margin: 0;
+    white-space: nowrap;
+}
 
 table {
    border: none;
    border-collapse: collapse;
    width: 40%;
+
 }
 
 td {
@@ -130,7 +138,7 @@ td {
     text-align:left;
 }
 tr {
-    width: 20%;
+    width: 60%;
 
 }
 tr:hover {
@@ -155,3 +163,4 @@ dl dd {
     padding: 0;
     margin: 0;
 }
+
