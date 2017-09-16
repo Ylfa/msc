@@ -43,23 +43,29 @@ class Skammstafanir extends Component {
 
   render() {
     const { words, error } = this.state;
-    const list = words.map((words) => {
+    console.log(words);
 
-      return (
-          <li key={words.lykill}>{ words.skm } - {words.full_name}</li>
-      );
-    })
+    return(
 
-    return (
-      <div>
-          {error ? (<p>Villa við að sækja gögn!</p>) : null}
-        <ul className="link-list">
-            <h2> Styttingar og þýðing þeirra </h2>
-            {list}
-        </ul>
-      </div>
-    );
-  }
+    <div>
+
+        {words.map((words) => {
+            return (
+                <table><tbody>
+                    <tr>
+                        <td><dl key={words.lykill}>
+                            <dt>{words.skm}</dt>
+                            <dd>{words.full_name}</dd>
+                        </dl></td>
+                    </tr>
+                </tbody></table>
+        )
+    })}
+    {error ? (<p>Villa við að sækja gögn!</p>) : null}
+    <Link to="/">Tilbaka</Link>
+    </div>
+   )
 }
-
+}
 export default Skammstafanir;
+

@@ -5,17 +5,6 @@ html {
   text-align: left;
 }
 
-/*.navigation {
-    float: left;
-    width: 300px;
-}
-
-/*.mainmenu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-*/
 .mainmenu a {
   display: block;
   text-decoration: none;
@@ -34,25 +23,12 @@ html {
     background-color: lightgrey;
 }
 
-/*
-.Years {
-    float: left;
-}
-
-.Names {
-    float: left;
-}
-*/
 ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: auto;
 }
-/*
-li a {
-    float: left;
-}*/
 
 h2{
   overflow: auto;
@@ -141,26 +117,41 @@ label {
   text-align: right;
 }
 
-input, textarea {
-  font: 1em sans-serif;
-  width: 300px;
-  box-sizing: border-box;
-  border: 1px solid #999;
+
+table {
+   border: none;
+   border-collapse: collapse;
+   width: 40%;
 }
 
-input:focus, textarea:focus {
-  border-color: #000;
+td {
+    text-align: left;
+    padding: 2px;
+    text-align:left;
+}
+tr {
+    width: 20%;
+
+}
+tr:hover {
+    background-color: #f5f5f5
+}
+div {
+    overflow: auto;
 }
 
-textarea {
-  vertical-align: top;
-  height: 6em;
+dl {
+    width: 200px;
 }
-
-.button {
-  padding-left: 120px;
+dl dt {
+    width: 100px;
+    float: left;
+    padding: 0;
+    margin: 0;
 }
-
-button {
-  margin-left: .5em;
+dl dd {
+    width: 60px;
+    float: left;
+    padding: 0;
+    margin: 0;
 }
